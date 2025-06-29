@@ -1,0 +1,79 @@
+esphome:
+  name: mars-hydro-controller
+  friendly_name: Mars Hydro Controller
+
+esp32:
+  board: esp32dev
+  framework:
+    type: arduino
+
+# Wifi
+wifi:
+  networks:
+  - ssid: !secret wifi_ssid
+    password: !secret wifi_password
+  - ssid: !secret wifi_ssid_2
+    password: !secret wifi_password
+  
+  # Fallback
+  ap:
+    ssid: "Mars Hydro Controller Fallback"
+    password: !secret ap_fallback_wifi_password
+
+# OTA updates
+ota:
+  platform: esphome
+  password: !secret ota_password
+
+# Web-interface
+web_server:
+  port: 80
+
+# API 
+api:
+  encryption:
+    key: !secret api_encryption_key
+
+# Logger 
+logger:
+  level: INFO
+  baud_rate: 0
+  
+uart:
+  id: device_uart
+  tx_pin: GPIO1
+  rx_pin: GPIO3
+  baud_rate: 9600
+  
+output:
+  - platform: ledc
+    pin: GPIO2
+    id: pwm_output
+    frequency: 2000Hz
+
+light:
+  - platform: monochromatic
+    name: "Mars Hydro Lamp"
+    output: pwm_output
+    id: lamp_control
+    default_transition_length: 1s  
+    gamma_correct: 1.0 
+
+sensor:
+  - platform: template
+    name: "Mars Hydro Helderheid"
+    id: brightness_sensor
+    unit_of_measurement: "%"
+    accuracy_decimals: 0
+    icon: mdi:brightness-percent
+    lambda: |-
+      if (id(lamp_control).current_values.get_state()) {
+        // Als de lamp aan is, geef het helderheidspercentage
+        return id(lamp_control).current_values.get_brightness() * 100.0;
+      } else {
+        // Als de lamp uit is, geef 0% terug
+        return 0.0;
+      }
+    update_interval: 1s
+
+captive_portal:
