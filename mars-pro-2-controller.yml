@@ -1,0 +1,64 @@
+esphome:
+  name: mars-pro-2-controller
+  friendly_name: Mars Pro Controller
+
+# ESP32-S3-MINI-1
+esp32:
+  board: esp32-s3-devkitc-1
+  framework:
+    type: esp-idf
+
+logger:
+
+api:
+  encryption:
+    key: "REPLACEME"
+
+ota:
+  - platform: esphome
+    password: "REPLACEME"
+
+wifi:
+  ssid: !secret wifi_ssid
+  password: !secret wifi_password
+  ap:
+    ssid: "MarsPro-ESPHOME-Backup"
+    password: "REPLACEME"
+
+uart:
+  id: device_uart
+  tx_pin: GPIO1
+  rx_pin: GPIO3
+  baud_rate: 9600
+output:
+  - platform: ledc
+    pin: GPIO4
+    id: pwm_output
+    frequency: 2000Hz
+    # 6% is already off
+    min_power: 0.07
+    max_power: 1.0
+    zero_means_zero: true
+light:
+  - platform: monochromatic
+    name: "Mars Pro Lamp"
+    output: pwm_output
+    id: lamp_control
+    default_transition_length: 0s
+    gamma_correct: 1.0
+sensor:
+  - platform: template
+    name: "Mars Pro Brightness"
+    id: brightness_sensor
+    unit_of_measurement: "%"
+    accuracy_decimals: 0
+    icon: mdi:brightness-percent
+    lambda: |-
+      if (id(lamp_control).current_values.get_state()) {
+        return id(lamp_control).current_values.get_brightness() * 100.0;
+      } else {
+        return 0.0;
+      }
+    update_interval: 1s
+
+captive_portal:

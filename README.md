@@ -11,17 +11,30 @@ This project provides custom ESPHome YAML and instructions for controlling Mars 
 - Works with the original Bluetooth dongle (requires flashing)
 - Fully local, no cloud required
 
-## Instructions
+## Shared Instructions
 
 ### 1. Disassemble the dongle
 - There are 2 screws hidden behind the label on the back. Peel back the sticker to access them.
 - Remove the screws to open the case.
 
-### 2. Solder header pins
+
+### Mars Hydro
+
+#### 2. Solder header pins
 - Solder 6 header pins onto the exposed pads so you can connect Dupont cables.
 - This will let you interface with a serial programmer.
 
-### 3. Connect to a serial adapter
+
+### Mars Pro Plus Dongle V2.1 2024-11-05
+
+- Solder 4 Header PINS onto the exposed pads on the right side
+- Short GND and 100 during before powering on to reach flash mode
+
+
+<img width="300" src="https://github.com/user-attachments/assets/edd12fbe-b702-4183-a44c-6229e36ac200" alt="Mars Pro Plus Donlge V2.1 Both Sides" />
+
+
+#### 3. Connect to a serial adapter
 - Connect pin IO0 (DEBUG) to GND before connecting to put the device in download mode, remove after boot.
 - Use an ESP-compatible USB-to-Serial adapter (for example: CH340 3.3V-5V TTL USB Serial Port Adapter).
 - Make sure to use 3.3V for power and IO.
@@ -36,8 +49,7 @@ This project provides custom ESPHome YAML and instructions for controlling Mars 
 - Once flashed, adopt the device in Home Assistant via ESPHome.
 - You can then control your Mars Hydro lights locally without the cloud.
 
-![PXL_20250629_075150959](https://github.com/user-attachments/assets/27c800f4-8965-49f0-9782-ec91fe6a37b3)
-![PXL_20250629_075159762](https://github.com/user-attachments/assets/bb4eb533-49c6-4ce8-9aab-fa472cb8d017)
+<img width="300" alt="ESP32-WROOM-32E BTMO_USB_V2.0 2023-08-30 Both Sides" src="https://github.com/user-attachments/assets/2df6694d-68a6-4cd0-a542-2c3ff51d3950" />
 
 ## Disclaimer
 This is an unofficial modification. Use at your own risk.
